@@ -1,6 +1,8 @@
 ## NorthernLightsBroadcast
 Watch your favorite movies and series in TLD
 
+![Screenshot](https://github.com/DigitalzombieTLD/ModListJson/blob/73f1325b58b284dfb0cc511e97189380be8ad3e6/list_icon_northernlightsbroadcast.png)
+
 Requires:
 - AudioCore
 - AudioManager (>= 1.3.8)
