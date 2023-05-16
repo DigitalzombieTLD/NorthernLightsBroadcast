@@ -55,7 +55,7 @@ namespace NorthernLightsBroadcast
 
         public override void OnUpdate()
 		{
-            if(clipNames.Count > 0)
+            if(clipNames.Count > 0 || StreamStuff.fileURL.Count > 0)
             {
                 if (InputManager.GetKeyDown(InputManager.m_CurrentContext, Settings.options.interactButton))
                 {

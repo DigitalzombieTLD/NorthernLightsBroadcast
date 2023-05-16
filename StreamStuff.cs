@@ -14,7 +14,7 @@ namespace NorthernLightsBroadcast
         
         public static string indexFileContent;
 
-        public static int globalChance = 35;
+        public static int globalChance = 50;
 
         public static List<string> fileURL = new List<string>();
         public static Dictionary<string, int> playbackChance = new Dictionary<string, int>();

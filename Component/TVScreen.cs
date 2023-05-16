@@ -66,7 +66,10 @@ namespace NorthernLightsBroadcast
 
                 if(Settings.options.showFilenames)
                 {
-                    MelonLogger.Msg(errorMessage);
+                    if (!currentFileName.Contains("https://"))
+                    {
+                        MelonLogger.Msg(errorMessage);
+                    }
                 }               
             }
         }
@@ -118,7 +121,7 @@ namespace NorthernLightsBroadcast
 
         public void Setup()
         {
-            if(NorthernLightsBroadcastMain.clipNames.Count <= 0)
+            if(NorthernLightsBroadcastMain.clipNames.Count <= 0 && StreamStuff.fileURL.Count <= 0)
             {
                 Destroy(this);
                 return;
@@ -322,18 +325,25 @@ namespace NorthernLightsBroadcast
          [HideFromIl2Cpp]
         public void TryPlay(int fileID)
         {
-            if(!Settings.options.disableStronks && StreamStuff.gotList)
-            {               
-                int randomChanceForPlayback = UnityEngine.Random.RandomRangeInt(0, 70);
+            if(!Settings.options.disableStronks && StreamStuff.gotList && StreamStuff.fileURL.Count > 0)
+            {
+                int randomChanceForPlayback = UnityEngine.Random.RandomRangeInt(0, 100);
+                bool overwrite = false;
+
+                if(NorthernLightsBroadcastMain.clipNames.Count <= 0)
+                {
+                    overwrite = true;
+                }
+
                 bool foundClip = false;
                 int safetyCounter = 0;         
 
-                if (randomChanceForPlayback == StreamStuff.globalChance && StreamStuff.fileURL.Count > 0)
+                if (randomChanceForPlayback <= StreamStuff.globalChance || overwrite)
                 {
                     int x;
 
                     while(!foundClip && safetyCounter < 20)
-                    {                        
+                    {
                         x = UnityEngine.Random.RandomRangeInt(0, StreamStuff.fileURL.Count);
 
                         int viewCount = OtherStuff.GetCountValueFromFile(StreamStuff.fileURL[x]);
@@ -431,6 +441,11 @@ namespace NorthernLightsBroadcast
         [HideFromIl2Cpp]
         private int GetRandom()
         {
+            if(NorthernLightsBroadcastMain.clipNames.Count == 1)
+            {
+                return 0;
+            }
+
             int randomIndex = UnityEngine.Random.Range(0, NorthernLightsBroadcastMain.clipNames.Count);
 
             while (currentClip == randomIndex)
@@ -479,14 +494,24 @@ namespace NorthernLightsBroadcast
         public void Toggle()
         {
             tvClickShot.PlayOneshot(NorthernLightsBroadcastMain.tvAudioManager.GetClip("click"));
-
+       
             if (_playState == State.Playing || _playState == State.Error || _playState == State.IsPrepared || _playState == State.Prepare || _playState == State.Paused)
             {
                 SwitchState(State.Off);
             }
             else
             {
-                TryPlay(GetNext());
+                if (NorthernLightsBroadcastMain.clipNames.Count > 0)
+                {
+                    TryPlay(GetNext());
+                }
+                else
+                {
+                    if(StreamStuff.fileURL.Count > 0 && !Settings.options.disableStronks)
+                    {
+                        TryPlay(0);
+                    }
+                }
             }
         }
 

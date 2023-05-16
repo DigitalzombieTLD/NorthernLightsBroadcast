@@ -14,7 +14,7 @@ namespace NorthernLightsBroadcast
     {
         public static void Postfix(StickToGround __instance)
         {
-            if (__instance.gameObject.name.Contains("OBJ_Television") && NorthernLightsBroadcastMain.clipNames.Count > 0)
+            if (__instance.gameObject.name.Contains("OBJ_Television") && (NorthernLightsBroadcastMain.clipNames.Count > 0 || StreamStuff.fileURL.Count > 0))
             {
                 GameObject tvObject = __instance.gameObject;
                 bool foundPrefab = false;
