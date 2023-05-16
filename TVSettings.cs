@@ -7,6 +7,12 @@ namespace NorthernLightsBroadcast
 {
     internal class TVSettings : JsonModSettings
     {
+        [Section("Buttons")]
+
+        [Name("Interact button")]
+        [Description("Button to witch TV on/off")]
+        public KeyCode interactButton = KeyCode.Mouse2;
+
         [Section("Playback")]
 
         [Name("Sequence")]

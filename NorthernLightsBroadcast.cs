@@ -57,7 +57,7 @@ namespace NorthernLightsBroadcast
 		{
             if(clipNames.Count > 0)
             {
-                if (InputManager.GetKeyDown(InputManager.m_CurrentContext, KeyCode.Mouse2))
+                if (InputManager.GetKeyDown(InputManager.m_CurrentContext, Settings.options.interactButton))
                 {
                     if (Physics.Raycast(GameManager.GetMainCamera().transform.position, GameManager.GetMainCamera().transform.TransformDirection(Vector3.forward), out hit, 3f, layerMask))
                     {
