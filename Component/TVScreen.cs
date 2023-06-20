@@ -16,6 +16,7 @@ using UnityEngine.Events;
 
 namespace NorthernLightsBroadcast
 {
+    [RegisterTypeInIl2Cpp]
     public class TVScreen : MonoBehaviour
     {
         private MeshRenderer screenRenderer;

@@ -25,8 +25,9 @@ namespace NorthernLightsBroadcast
         public override void OnInitializeMelon()
 		{
             LoadEmbeddedAssetBundle();
-            ClassInjector.RegisterTypeInIl2Cpp<TVScreen>();
+          
             layerMask |= 1 << 17; // gear layer
+            layerMask |= 1 << 19; // InteractiveProp layer
 
             if (!Directory.Exists(videoPath))
             {
