@@ -45,10 +45,10 @@
         </Reference>
     </ItemDefinitionGroup>
     <ItemGroup>
-      <None Remove="Resources\NorthernLightsBroadcast" />
+      <None Remove="Resources\northernlightsbroadcastbundle" />
     </ItemGroup>
     <ItemGroup>
-      <EmbeddedResource Include="Resources\NorthernLightsBroadcast" />
+      <EmbeddedResource Include="Resources\northernlightsbroadcastbundle" />
     </ItemGroup>
 
     <!--This is the list of assemblies that the mod references. Most of these are unnecessary for normal mods, but are included here for completeness.-->
@@ -88,6 +88,9 @@
         <Reference Include="Il2CppTLD.TimeLib" />
         <Reference Include="Il2CppTLD.Trial" />
         <Reference Include="Il2CppTLD.UserGeneratedContent" />
+        <Reference Include="ModData">
+          <HintPath>..\..\..\..\Steam\steamapps\common\TheLongDark\Mods\ModData.dll</HintPath>
+        </Reference>
         <Reference Include="ModSettings">
           <HintPath>W:/Steam/steamapps/common/TheLongDark\Mods\ModSettings.dll</HintPath>
         </Reference>
@@ -108,6 +111,15 @@
         </Reference>
         <Reference Include="UnityEngine.UI">
           <HintPath>W:/Steam/steamapps/common/TheLongDark\MelonLoader\Il2CppAssemblies\UnityEngine.UI.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.UIElementsModule">
+          <HintPath>..\..\..\..\Steam\steamapps\common\TheLongDark\MelonLoader\Il2CppAssemblies\UnityEngine.UIElementsModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.UIElementsNativeModule">
+          <HintPath>..\..\..\..\Steam\steamapps\common\TheLongDark\MelonLoader\Il2CppAssemblies\UnityEngine.UIElementsNativeModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.UIModule">
+          <HintPath>..\..\..\..\Steam\steamapps\common\TheLongDark\MelonLoader\Il2CppAssemblies\UnityEngine.UIModule.dll</HintPath>
         </Reference>
         <Reference Include="UnityEngine.VideoModule">
           <HintPath>W:/Steam/steamapps/common/TheLongDark\MelonLoader\Il2CppAssemblies\UnityEngine.VideoModule.dll</HintPath>

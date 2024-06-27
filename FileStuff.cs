@@ -13,7 +13,10 @@ namespace NorthernLightsBroadcast
         public static string settingsFile = Application.dataPath + @"/../Mods/NorthernLightsBroadcast_ResumeAtFrame.ini";
         public static Dictionary<string, double> clipFrames = new Dictionary<string, double>();
         public static FileStream frameFile;
-
+        public static List<string> videoFileExtensions = new List<string>()
+        {
+            ".asf", ".avi", ".dv", ".m4v", ".mov", ".mp4", ".mpg", ".mpeg", ".ogv", ".vp8", ".webm", ".wmv"
+        };
       
         public static void OpenFrameFile()
         {
@@ -85,6 +88,31 @@ namespace NorthernLightsBroadcast
 
                 writer.Close();
             }            
+        }
+
+       
+
+        public static string[] GetFilesInPath(string path)
+        {
+            string[] allFilesInPath = Directory.GetFiles(path, "*", SearchOption.TopDirectoryOnly);
+            List<string> allVideoFilesInPath = new List<string>();
+
+            foreach (string file in allFilesInPath)
+            {
+                if(videoFileExtensions.Contains(Path.GetExtension(file)))
+                {
+                    allVideoFilesInPath.Add(file);
+                }
+            }
+
+            return allVideoFilesInPath.ToArray();
+        }
+
+        public static string[] GetFoldersInPath(string path)
+        {
+            string[] allFoldersInPath = Directory.GetDirectories(path, "*", SearchOption.TopDirectoryOnly);
+
+            return allFoldersInPath;
         }
     }
 }

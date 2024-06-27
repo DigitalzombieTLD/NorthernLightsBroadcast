@@ -6,6 +6,7 @@ using System.Collections;
 using System.Reflection;
 using Il2Cpp;
 using UnityEngine.Video;
+using static NorthernLightsBroadcast.TVManager;
 
 namespace NorthernLightsBroadcast
 {
@@ -14,60 +15,25 @@ namespace NorthernLightsBroadcast
     {
         public static void Postfix(StickToGround __instance)
         {
-            if (__instance.gameObject.name.Contains("OBJ_Television") && (NorthernLightsBroadcastMain.clipNames.Count > 0 || StreamStuff.fileURL.Count > 0))
+            if (__instance.gameObject.name.Contains("OBJ_TelevisionB_LOD0") || __instance.gameObject.name.Contains("OBJ_Television_LOD0"))
             {
                 GameObject tvObject = __instance.gameObject;
                 bool foundPrefab = false;
 
+                SaveLoad.LoadTheTVs();
 
                 if (tvObject != null)
                 {
-                    if (tvObject.name.Contains("_LOD0"))
+                    TVManager manager = tvObject.GetComponent<TVManager>();
+
+                    if (manager == null)
                     {
-                        if (tvObject.transform.parent.name.Contains("_Prefab"))
-                        {
-                            tvObject = tvObject.transform.parent.gameObject;
-                            foundPrefab = true;
-                        }
-                        else if (tvObject.transform.parent.transform.parent.name.Contains("_Prefab"))
-                        {
-                            tvObject = tvObject.transform.parent.transform.parent.transform.gameObject;
-                            foundPrefab = true;
-                        }
-                    }
+                        tvObject.AddComponent<TVManager>();
 
-                    if(!foundPrefab)
-                    {
-                        return;
-                    }
-
-                    TVScreen screen = tvObject.GetComponentInChildren<TVScreen>();
-
-                    if (screen == null)
-                    {
-                        GameObject newScreen = null;                      
-
-                        if (tvObject.name.Contains("OBJ_TelevisionB_Prefab"))
-                        {                        
-                            newScreen = UnityEngine.Object.Instantiate(NorthernLightsBroadcastMain.VID_TelevisionB_Prefab, tvObject.transform);
-                            newScreen.name = "VID_TelevisionB_Prefab";
-                            TVScreen newTV = newScreen.AddComponent<TVScreen>();
-                            newTV.Setup();
-                            
-                        }
-                        else if (tvObject.name.Contains("OBJ_TelevisionWall_Prefab"))
+                        if (__instance.gameObject.name.Contains("OBJ_TelevisionB_LOD0"))
                         {
-                            newScreen = UnityEngine.Object.Instantiate(NorthernLightsBroadcastMain.VID_TelevisionWall_Prefab, tvObject.transform);
-                            newScreen.name = "VID_TelevisionWall_Prefab";
-                            TVScreen newTV = newScreen.AddComponent<TVScreen>();
-                            newTV.Setup();
-                        }
-                        else if (tvObject.name.Contains("OBJ_Television_Prefab"))
-                        {
-                            newScreen = UnityEngine.Object.Instantiate(NorthernLightsBroadcastMain.VID_Television_Prefab, tvObject.transform);
-                            newScreen.name = "VID_Television_Prefab";
-                            TVScreen newTV = newScreen.AddComponent<TVScreen>();
-                            newTV.Setup();
+                            MeshRenderer originalRenderer = tvObject.GetComponent<MeshRenderer>();
+                            originalRenderer.sharedMaterial = NorthernLightsBroadcastMain.TelevisionB_Material_Cutout;
                         }
                     }
                 }
@@ -75,41 +41,127 @@ namespace NorthernLightsBroadcast
         }
     }
 
-    //InvokeErrorReceivedCallback_Internal(VideoPlayer source, string errorStr)
-    [HarmonyLib.HarmonyPatch(typeof(VideoPlayer), "InvokeErrorReceivedCallback_Internal")]
-    public class ErrorReceivedPatch
+    [HarmonyLib.HarmonyPatch(typeof(GearItem), "Awake")]
+    public class tvComponentPatcher
     {
-        public static void Postfix(VideoPlayer __instance, ref VideoPlayer source, ref string errorStr)
+        public static void Postfix(ref GearItem __instance)
         {
-            EventStuff.ErrorReceived(source, errorStr);
+            if (__instance.name.Contains("GEAR_TV_LCD") || __instance.name.Contains("GEAR_TV_CRT") || __instance.name.Contains("GEAR_TV_WALL"))
+            {
+                TVManager tvComponent = __instance.gameObject.GetComponent<TVManager>();
+                
+                if (tvComponent == null)
+                {
+                    tvComponent = __instance.gameObject.AddComponent<TVManager>();
+                }               
+            }
         }
     }
 
-    [HarmonyLib.HarmonyPatch(typeof(VideoPlayer), "InvokeStartedCallback_Internal")]
-    public class PlaybackStartedPatch
+    [HarmonyLib.HarmonyPatch(typeof(GearItem), "Deserialize")]
+    public class tvComponentDeserializePatcher
     {
-        public static void Postfix(VideoPlayer __instance, ref VideoPlayer source)
+        public static void Postfix(ref GearItem __instance)
         {
-            EventStuff.PlaybackStarted(source);
+            if (__instance.name.Contains("GEAR_TV_LCD") || __instance.name.Contains("GEAR_TV_CRT") || __instance.name.Contains("GEAR_TV_WALL"))
+            {
+                TVManager tvComponent = __instance.gameObject.GetComponent<TVManager>();
+
+                if (tvComponent != null)
+                {
+                    ObjectGuid objectGuid = __instance.gameObject.GetComponent<ObjectGuid>();
+
+                    if (objectGuid == null)
+                    {
+                        tvComponent.objectGuid = tvComponent.gameObject.AddComponent<ObjectGuid>();
+                        tvComponent.thisGuid = tvComponent.objectGuid.GetPDID();
+                        if (tvComponent.thisGuid == null)
+                        {
+                            tvComponent.objectGuid.MaybeRuntimeRegister();
+                            tvComponent.thisGuid = tvComponent.objectGuid.GetPDID();
+                        }                       
+                    }
+                    else
+                    {
+                        tvComponent.thisGuid = objectGuid.GetPDID();
+                    }
+
+                    if (SaveLoad.GetState(tvComponent.thisGuid) == TVState.Playing)
+                    {
+                        string tempFolder = SaveLoad.GetFolder(tvComponent.thisGuid);
+
+                        if (tempFolder != null && Directory.Exists(tempFolder))
+                        {
+                            tvComponent.ui.currentFolder = tempFolder;
+                        }
+
+                        string tempClip = SaveLoad.GetLastPlayed(tvComponent.thisGuid);
+
+                        if (tempClip != null && File.Exists(tempClip))
+                        {
+                            tvComponent.ui.currentClip = tempClip;
+                        }
+
+                        tvComponent.ui.Prepare();
+                    }
+                    else
+                    {
+                        tvComponent.SwitchState(SaveLoad.GetState(tvComponent.thisGuid));
+                    }
+                }
+            }
         }
     }
-    
 
-    [HarmonyLib.HarmonyPatch(typeof(VideoPlayer), "InvokePrepareCompletedCallback_Internal")]
-    public class PrepareCompletedPatch
+    [HarmonyLib.HarmonyPatch(typeof(InterfaceManager), "ShouldEnableMousePointer")]
+    public class CursorPatch
     {
-        public static void Postfix(VideoPlayer __instance, ref VideoPlayer source)
+        public static void Postfix(InterfaceManager __instance, ref bool __result)
         {
-            EventStuff.PrepareCompleted(source);
+            if(TVLock.lockedInTVView)
+            {
+                __result = true;
+            }
         }
     }
 
-    [HarmonyLib.HarmonyPatch(typeof(VideoPlayer), "InvokeLoopPointReachedCallback_Internal")]
-    public class EndReachedPatch
+    [HarmonyLib.HarmonyPatch(typeof(PlayerManager), "ShouldSuppressCrosshairs")]
+    public class CrosshairPAtch
     {
-        public static void Postfix(VideoPlayer __instance, ref VideoPlayer source)
+        public static void Postfix(PlayerManager __instance, ref bool __result)
         {
-            EventStuff.EndReached(source);
+            if (TVLock.lockedInTVView)
+            {
+                __result = true;
+            }
+        }
+    }
+
+    [HarmonyLib.HarmonyPatch(typeof(SaveGameSystem), nameof(SaveGameSystem.SaveSceneData))]
+    public class SaveCandles
+    {
+        public static void Postfix(ref SlotData slot)
+        {
+            SaveLoad.SaveTheTVs();
+        }
+    }
+
+    [HarmonyLib.HarmonyPatch(typeof(PlayerManager), "AddItemToPlayerInventory")]
+    public class tvTurnOffOnStow
+    {
+        public static void Prefix(ref PlayerManager __instance, ref GearItem gi, ref bool trackItemLooted, ref bool enableNotificationFlag)
+        {
+            if (gi.name.Contains("GEAR_TV_LCD") || gi.name.Contains("GEAR_TV_CRT") || gi.name.Contains("GEAR_TV_WALL"))
+            {
+                TVManager tvComponent = gi.gameObject.GetComponent<TVManager>();
+
+                if (tvComponent.currentState != TVState.Off)
+                {
+                    tvComponent.SavePlaytime();
+                    tvComponent.SwitchState(TVState.Off);
+                    SaveLoad.SetState(tvComponent.thisGuid, tvComponent.currentState);
+                }
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 using ModSettings;
 using MelonLoader;
 using AudioMgr;
+using static NorthernLightsBroadcast.Settings;
 
 namespace NorthernLightsBroadcast
 {
@@ -14,22 +15,17 @@ namespace NorthernLightsBroadcast
         public KeyCode interactButton = KeyCode.Mouse2;
 
         [Section("Playback")]
+     
+        [Name("Play folder")]
+        [Description("Continues playing all files after the last played file")]
+        public bool playFolder = true;
 
-        [Name("Sequence")]
-        [Description("Playback order")]
-        public TVScreen.Sequence sequence = TVScreen.Sequence.Random;
+        [Name("Loop folder")]
+        [Description("Loops through all files inside the current folder")]
+        public bool loopFolder = false;
 
-        [Name("Loop")]
-        [Description("Loop settings for playback")]
-        public TVScreen.Loop loop = TVScreen.Loop.All;
-
-       
         [Section("Debug")]
-
-        [Name("Log filenames")]
-        [Description("Videofile name will be logged on playback error")]
-        public bool showFilenames = true;
-
+        
         [Name("Debug")]
         [Description("Debug mode. Default: Off")]
         public bool disableStronks = false;
@@ -43,6 +39,7 @@ namespace NorthernLightsBroadcast
     internal static class Settings
     {
         public static TVSettings options;
+        public enum LoopSetting { Off, LoopFile, LoopFolder };
 
         public static void OnLoad()
         {

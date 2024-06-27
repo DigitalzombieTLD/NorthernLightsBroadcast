@@ -22,6 +22,21 @@ namespace NorthernLightsBroadcast
 
         public static string indexFileURL = "https://digitalzombie.de/NorthernLightsBroadcast/index";
 
+        private static string _fileURL = "https://digitalzombie.de/NorthernLightsBroadcast/lines.txt";
+
+        public static void GetText()
+        {
+            string fileContent = new System.Net.WebClient().DownloadString(_fileURL);
+
+            string[] lines = fileContent.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
+
+            foreach(string line in lines) 
+            { 
+                MelonLogger.Msg(line);
+            }
+        }
+
         public static void GetIndexList()
         {
             try
@@ -47,7 +62,7 @@ namespace NorthernLightsBroadcast
 
                 if (fileURL.Count > 0)
                 {
-                    OtherStuff.OpenCountFile();
+                    
                     gotList = true;
                 }                
             }
