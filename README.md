@@ -7,6 +7,7 @@ Requires:
 - AudioCore
 - AudioManager (>= 1.4.1)
 - ModSettings
+- ModComponent
 
 # How to use
 - Check modsettings for interaction button (default middle mouse button)
