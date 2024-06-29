@@ -25,7 +25,7 @@ namespace NorthernLightsBroadcast
 
         public static ClipManager tvAudioManager;
 
-        public static string videoPath = UnityEngine.Application.dataPath + @"/../Mods/audio/";
+        //public static string videoPath = UnityEngine.Application.dataPath + @"/../Mods/audio/";
         public static RaycastHit hit;
         public static int layerMask = 0;
 
@@ -57,7 +57,6 @@ namespace NorthernLightsBroadcast
 
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
-            MelonLogger.Msg("SCENE LAODED: " + sceneName);
             TweenFactory.SceneManagerSceneLoaded();
             if ((!sceneName.Contains("Empty") && !sceneName.Contains("Boot") && !sceneName.Contains("MainMenu")))
             {
@@ -155,6 +154,10 @@ namespace NorthernLightsBroadcast
             GameObject.DontDestroyOnLoad(NLB_TV_WALL);
 
             TelevisionB_Material_Cutout = assetBundle.LoadAsset<Material>("MaterialTelevisionB");
+            if(TelevisionB_Material_Cutout == null)
+            {
+                MelonLogger.Msg("MaterialTelevisionB is null");
+            }
             TelevisionB_Material_Cutout.hideFlags = HideFlags.HideAndDontSave;
             GameObject.DontDestroyOnLoad(TelevisionB_Material_Cutout); 
             

@@ -90,6 +90,7 @@ namespace NorthernLightsBroadcast
             GameManager.GetVpFPSCamera().SetFOVFromOptions(m_StartCameraFOV);
             GameManager.GetVpFPSCamera().UpdateCameraRotation();
             GameManager.GetPlayerManagerComponent().StickPlayerToGround();
+            GameManager.GetVpFPSCamera().UnlockRotationLimit();
 
             currentManager.ui.ActivateOSD(false);
             currentManager = null;

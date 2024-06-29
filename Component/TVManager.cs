@@ -76,6 +76,13 @@ namespace NorthernLightsBroadcast
 
                 objectRenderer = this.gameObject.GetComponent<MeshRenderer>();
 
+                if(this.gameObject.name.Contains("GEAR_TV_CRT"))
+                {
+                    isCRT = true;
+                    MelonLoader.MelonLogger.Msg("CRT TV found");
+                    objectRenderer.sharedMaterial = NorthernLightsBroadcastMain.TelevisionB_Material_Cutout;
+                }
+
                 redbutton = screenObject.transform.Find("PowerButton").gameObject.AddComponent<TVButton>();
                 redbutton.manager = this;
 
@@ -223,9 +230,7 @@ namespace NorthernLightsBroadcast
             {
                 case TVState.Off:
                     ui.screenOff.SetActive(true);
-                    ui.screenPlayback480.SetActive(false);
-                    ui.screenPlayback720.SetActive(false);
-                    ui.screenPlayback1080.SetActive(false);
+                    ui.screenPlayback.SetActive(false);                   
                     ui.screenStatic.SetActive(false);
                     ui.screenError.SetActive(false);
                     ui.screenLoading.SetActive(false);
@@ -241,9 +246,7 @@ namespace NorthernLightsBroadcast
 
                 case TVState.Static:
                     ui.screenOff.SetActive(false);
-                    ui.screenPlayback480.SetActive(false);
-                    ui.screenPlayback720.SetActive(false);
-                    ui.screenPlayback1080.SetActive(false);
+                    ui.screenPlayback.SetActive(false);
                     ui.screenStatic.SetActive(true);
                     ui.screenError.SetActive(false);
                     ui.screenLoading.SetActive(false);
@@ -261,7 +264,7 @@ namespace NorthernLightsBroadcast
                     ui.screenStatic.SetActive(false);
                     ui.screenError.SetActive(false);
                     ui.screenLoading.SetActive(false);
-                    ui.screenPlayback1080.SetActive(true);
+                    ui.screenPlayback.SetActive(true);
                     ui.playingNowText.text = "Paused";
                     ui.playButton.gameObject.SetActive(true);
                     ui.pauseButton.gameObject.SetActive(false);
@@ -276,8 +279,7 @@ namespace NorthernLightsBroadcast
                     ui.screenStatic.SetActive(false);
                     ui.screenError.SetActive(false);
                     ui.screenLoading.SetActive(false);
-                    ui.screenPlayback1080.SetActive(true);
-                    ui.SwitchRenderTexture();
+                    ui.screenPlayback.SetActive(true);
                     ui.playButton.gameObject.SetActive(false);
                     ui.pauseButton.gameObject.SetActive(true);
                     ui.ActivateOSD(false);
@@ -313,7 +315,7 @@ namespace NorthernLightsBroadcast
                     ui.screenStatic.SetActive(true);
                     ui.screenError.SetActive(false);
                     ui.screenLoading.SetActive(true);
-                    ui.screenPlayback1080.SetActive(true);
+                    ui.screenPlayback.SetActive(true);
                     redbutton.Glow(true);
                     ui.playingNowText.text = "Loading";
                     ui.osdAudio.SetActive(false);

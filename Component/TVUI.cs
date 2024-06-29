@@ -28,9 +28,7 @@ namespace NorthernLightsBroadcast
         public TVManager manager;
         public bool isSetup = false;
 
-        public GameObject screenPlayback480;
-        public GameObject screenPlayback720;
-        public GameObject screenPlayback1080;
+        public GameObject screenPlayback;
 
         public GameObject screenOff;
         public GameObject screenStatic;
@@ -108,9 +106,7 @@ namespace NorthernLightsBroadcast
 
             manager = this.gameObject.GetComponent<TVManager>();
 
-            screenPlayback480 = this.transform.Find("NLB_TV/Screens/ScreenPlaybackMesh480").gameObject;
-            screenPlayback720 = this.transform.Find("NLB_TV/Screens/ScreenPlaybackMesh720").gameObject;
-            screenPlayback1080 = this.transform.Find("NLB_TV/Screens/ScreenPlaybackMesh1080").gameObject;
+            screenPlayback = this.transform.Find("NLB_TV/Screens/ScreenPlaybackMesh").gameObject;
 
             screenOff = this.transform.Find("NLB_TV/Screens/ScreenOff").gameObject;
             screenStatic = this.transform.Find("NLB_TV/Screens/ScreenStatic").gameObject;
@@ -261,45 +257,7 @@ namespace NorthernLightsBroadcast
             isSetup = true;
         }
 
-        [HideFromIl2Cpp]
-        public void SwitchRenderTexture()
-        {
-            return;
-
-            if (manager.videoPlayer.texture.height == 480)
-            {
-                screenPlayback480.SetActive(true);
-                screenPlayback720.SetActive(false);
-                screenPlayback1080.SetActive(false);
-
-                manager.videoPlayer.targetTexture = screenPlayback1080.GetComponent<RenderTexture>();
-            }
-            else if(manager.videoPlayer.texture.height == 720)
-            {             
-                screenPlayback480.SetActive(false);
-                screenPlayback720.SetActive(true);
-                screenPlayback1080.SetActive(false);
-
-                manager.videoPlayer.targetTexture = screenPlayback720.GetComponent<RenderTexture>();
-            }
-            else if(manager.videoPlayer.texture.height == 1080)
-            {
-                screenPlayback480.SetActive(false);
-                screenPlayback720.SetActive(false);
-                screenPlayback1080.SetActive(true);
-
-                manager.videoPlayer.targetTexture = screenPlayback1080.GetComponent<RenderTexture>();
-            }
-            else
-            {
-                screenPlayback480.SetActive(false);
-                screenPlayback720.SetActive(false);
-                screenPlayback1080.SetActive(true);
-
-                manager.videoPlayer.targetTexture = screenPlayback1080.GetComponent<RenderTexture>();
-            }
-        }
-
+        
         [HideFromIl2Cpp]
         public void PopulateFiles()
         {

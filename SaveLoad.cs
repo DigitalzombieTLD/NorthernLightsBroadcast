@@ -52,17 +52,17 @@ namespace NorthernLightsBroadcast
         {
             if(thisIniData == null)
             {
-                return UnityEngine.Application.dataPath;
+                return UnityEngine.Application.dataPath + @"/../Mods";
             }
 
             if (TVID == null || !thisIniData[TVID].ContainsKey("currentFolder"))
             {
-                return UnityEngine.Application.dataPath;
+                return UnityEngine.Application.dataPath + @"/../Mods";
             }
 
             if (!Directory.Exists(thisIniData[TVID]["currentFolder"]))
             {
-                return UnityEngine.Application.dataPath;
+                return UnityEngine.Application.dataPath + @"/../Mods";
             }
 
             return thisIniData[TVID]["currentFolder"];
